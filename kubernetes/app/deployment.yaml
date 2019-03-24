@@ -1,0 +1,16 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: aplicacao-deployment
+spec:
+  template:
+    metadata:
+      labels:
+        name: aplicacao-pod
+    spec:
+      containers:
+        -
+          name: container-aplicacao
+          image: thiagosf/node-app:2
+          ports:
+            - containerPort: 3000

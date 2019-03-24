@@ -23,25 +23,31 @@ spec:
 minikube start
 ```
 
-3. Estabelecer conexão entre cluster (minikube) e o pod (container):
+3. Construir imagem do Dockerfile:
+
+```bash
+docker build . -t image-aplicacao
+```
+
+4. Estabelecer conexão entre cluster (minikube) e o pod (container):
 
 ```bash
 kubectl create -f aplicacao.yaml
 ```
 
-4. Verificar se o pod está sendo executado:
+5. Verificar se o pod está sendo executado:
 
 ```bash
 kubectl get pods
 ```
 
-5. Remove pod para verificar se kubernetes vai criar um novo:
+6. Remove pod para verificar se kubernetes vai criar um novo:
 
 ```bash
 kubectl delete pods aplicacao
 ```
 
-6. Verifica se kubernetes criou novo pod:
+7. Verifica se kubernetes criou novo pod:
 
 ```bash
 kubectl get pods
@@ -49,7 +55,7 @@ kubectl get pods
 
 Não foi recriado porque para que o kubernetes gerencie os pods, é preciso usar um `deployment`.
 
-7. Criar aquivo de configuração do deployment (`deployment.yaml`):
+8. Criar aquivo de configuração do deployment (`deployment.yaml`):
 
 ```yaml
 apiVersion: apps/v1beta1
@@ -69,31 +75,31 @@ spec:
             - containerPort: 80
 ```
 
-8. Criar deployment no cluster:
+9. Criar deployment no cluster:
 
 ```bash
 kubectl create -f deployment.yaml
 ```
 
-9. Verificar se o pod está sendo executado:
+10. Verificar se o pod está sendo executado:
 
 ```bash
 kubectl get pods
 ```
 
-10. Remove pod para verificar se deploymente vai recriar:
+11. Remove pod para verificar se deploymente vai recriar:
 
 ```bash
 kubectl delete pods aplicacao-deployment-123
 ```
 
-11. Verifica se kubernetes criou novo pod:
+12. Verifica se kubernetes criou novo pod:
 
 ```bash
 kubectl get pods
 ```
 
-12. Verificar endereço IP do pod em execução:
+13. Verificar endereço IP do pod em execução:
 
 ```bash
 kubectl describe pods | grep IP
@@ -101,19 +107,19 @@ kubectl describe pods | grep IP
 
 Não foi possível conectar! Pois é preciso mapear as portas.
 
-13. Usar dashboard com minikube:
+14. Usar dashboard com minikube:
 
 ```bash
 minikube dashboard
 ```
 
-14. Escalonar aplicação para aumentar número de réplicas do pod:
+15. Escalonar aplicação para aumentar número de réplicas do pod:
 
 - Workloads
 - Deployments
 - Botão ações `Scale`
 
-15. Verifica IPs novamente:
+16. Verifica IPs novamente:
 
 ```bash
 kubectl describe pods | grep IP
@@ -121,7 +127,7 @@ kubectl describe pods | grep IP
 
 Cada pod fica com um IP diferente.
 
-16. Criar `service` (balenceador de carga) para abstrair acesso aos pods (`servico-aplicacao.yaml`):
+17. Criar `service` (balenceador de carga) para abstrair acesso aos pods (`servico-aplicacao.yaml`):
 
 ```yaml
 apiVersion: v1
@@ -136,19 +142,19 @@ spec:
     name: aplicacao-pod
 ```
 
-17. Criar service no cluster:
+18. Criar service no cluster:
 
 ```bash
 kubectl create -f servico-aplicacao.yaml
 ```
 
-18. Verificar url de acesso:
+19. Verificar url de acesso:
 
 ```bash
 minikube service servico-aplicacao --url
 ```
 
-19. Organizar arquivos de configuração com estrturura:
+20. Organizar arquivos de configuração com estrturura:
 
 - app
   - aplicacao.yaml
@@ -160,7 +166,7 @@ minikube service servico-aplicacao --url
   - permissoes.yaml
   - servico-banco.yaml
 
-20. Criar arquivo de configuração do pod do banco de dados (`db/pod-banco.yaml`):
+21. Criar arquivo de configuração do pod do banco de dados (`db/pod-banco.yaml`):
 
 ```yaml
 apiVersion: v1
@@ -182,7 +188,7 @@ spec:
           value: "1"
 ```
 
-21. Criar objeto `StatefulSet` para persistir dados do banco, mapeando o volume do pod para um local externo (`db/statefulset.yaml`):
+22. Criar objeto `StatefulSet` para persistir dados do banco, mapeando o volume do pod para um local externo (`db/statefulset.yaml`):
 
 ```yaml
 apiVersion: apps/v1beta1
@@ -217,7 +223,7 @@ spec:
             claimName: configuracao-mysql
 ```
 
-22. Criar aquivo com permissões do volume (`db/permissoes.yaml`):
+23. Criar aquivo com permissões do volume (`db/permissoes.yaml`):
 
 ```yaml
 apiVersion: v1
@@ -232,7 +238,7 @@ spec:
       storage: 3Gi
 ```
 
-23. Serviço do banco (`db/servico-banco.yaml`):
+24. Serviço do banco (`db/servico-banco.yaml`):
 
 ```yaml
 apiVersion: v1
@@ -247,43 +253,43 @@ spec:
     name: mysql
 ```
 
-24. Criar statefulset no cluster:
-
-```bash
-kubectl create -f statefulset.yaml
-```
-
-25. Criar servico do banco no cluster:
-
-```bash
-kubectl create -f servico-banco.yaml
-```
-
-26. Criar permissões para acesso ao volume:
+25. Criar permissões para acesso ao volume:
 
 ```bash
 kubectl create -f permissoes.yaml
 ```
 
-27. Verificar pods sendo executados:
+26. Criar statefulset no cluster:
+
+```bash
+kubectl create -f statefulset.yaml
+```
+
+27. Criar servico do banco no cluster:
+
+```bash
+kubectl create -f servico-banco.yaml
+```
+
+28. Verificar pods sendo executados:
 
 ```bash
 kubectl get pods
 ```
 
-28. Acessar pod do mysql para criar tabelas:
+29. Acessar pod do mysql para criar tabelas:
 
 ```bash
 kubectl exec -it statefulset-mysql-0 sh
 ```
 
-29. Verificar url da aplicação:
+30. Verificar url da aplicação:
 
 ```bash
 minikube service servico-aplicacao --url
 ```
 
-30. Done!
+31. Done!
 
 ## Usando Google Cloud
 

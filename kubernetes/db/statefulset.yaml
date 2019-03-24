@@ -1,0 +1,37 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: statefulset-mysql
+spec:
+  serviceName: db
+  template:
+    metadata:
+      labels:
+        name: mysql
+    spec:
+      containers:
+        -
+          name: container-mysql
+          image: mysql
+          ports:
+            - containerPort: 3306
+          env:
+            -
+              name: MYSQL_ROOT_PASSWORD
+              value: root
+            -
+              name: MYSQL_DATABASE
+              value: banco
+            -
+              name: MYSQL_USER
+              value: docker
+            -
+              name: MYSQL_PASSWORD
+              value: docker
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: configuracao-mysql

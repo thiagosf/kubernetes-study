@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: aplicacao
+spec:
+  containers:
+    -
+      name: container-aplicacao
+      image: thiagosf/node-app:2
+      ports:
+        - containerPort: 3000
+      env:
+        -
+          name: DATABASE_URL
+          value: mysql://docker:docker@db:3306/banco
