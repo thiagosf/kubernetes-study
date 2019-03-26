@@ -1,5 +1,15 @@
 # Kubernetes Study
 
+## Cheatsheet
+
+```bash
+# ver log do pod (exemplo: log do npm start)
+kubectl logs $(kubectl get pods | grep aplicacao | awk '{print $1}') -f
+
+# encaminha porta do banco para acessar com cliente (host: 127.0.0.1)
+kubectl port-forward $(kubectl get pods | grep mysql | awk '{print $1}') 3306:3306
+```
+
 ## Passos para utilizar kubernetes (com minikube)
 
 1. Criar arquivo de configuração do kubernetes (`aplicacao.yaml`):

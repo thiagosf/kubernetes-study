@@ -4,10 +4,10 @@ const app = express()
 
 app.use((req, res, next) => {
   const { sequelize } = models
-  return sequelize.sync().then(() => {
+  sequelize.sync().then(() => {
     req.models = models
     next()
-  })
+  }).catch(next)
 })
 
 app.use('/', (req, res, next) => {

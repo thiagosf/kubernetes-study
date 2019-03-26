@@ -12,7 +12,7 @@ spec:
       containers:
         -
           name: container-mysql
-          image: mysql
+          image: mysql:5.7
           ports:
             - containerPort: 3306
           env:
@@ -29,9 +29,19 @@ spec:
               name: MYSQL_PASSWORD
               value: docker
           volumeMounts:
-            - name: mysql-data
+            -
+              name: mysql-data
               mountPath: /var/lib/mysql
+            -
+              name: mysql-config-volume
+              mountPath: /etc/mysql/conf.d/default_auth.cnf
+              subPath: default_auth
       volumes:
-        - name: mysql-data
+        -
+          name: mysql-data
           persistentVolumeClaim:
             claimName: configuracao-mysql
+        -
+          name: mysql-config-volume
+          configMap:
+            name: mysql-config
